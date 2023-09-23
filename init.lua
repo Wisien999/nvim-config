@@ -340,7 +340,7 @@ vim.keymap.set('n', '<leader>fgf', require('telescope.builtin').git_files, { des
 vim.keymap.set('n', '<leader>fcw', require('telescope.builtin').grep_string, { desc = '[F]ind [C]urrent [W]ord' })
 vim.keymap.set('n', '<leader>sh', require('telescope.builtin').help_tags, { desc = '[S]earch [H]elp' })
 vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { desc = '[S]earch [D]iagnostics' })
-vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc = '[S]earch [R]resume' })
+vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc = '[S]earch [R]esume' })
 
 -- [[ Configure Treesitter ]]
 -- See `:help nvim-treesitter`
