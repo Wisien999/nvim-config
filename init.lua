@@ -424,6 +424,14 @@ vim.keymap.set('n', '<leader>fw', require('telescope.builtin').live_grep, { desc
 vim.keymap.set('n', '<leader>ff', require('telescope.builtin').find_files, { desc = '[F]find [F]iles' })
 vim.keymap.set('n', '<leader>fgf', require('telescope.builtin').git_files, { desc = '[F]ind [G]it [F]iles' })
 vim.keymap.set('n', '<leader>fcw', require('telescope.builtin').grep_string, { desc = '[F]ind [C]urrent [W]ord' })
+local function telescope_live_grep_open_files()
+  require('telescope.builtin').live_grep {
+    grep_open_files = true,
+    prompt_title = 'Live Grep in Open Files',
+  }
+end
+vim.keymap.set('n', '<leader>sof', telescope_live_grep_open_files, { desc = '[S]earch in [O]pen [F]iles' })
+vim.keymap.set('n', '<leader>ss', require('telescope.builtin').builtin, { desc = '[S]earch [S]elect Telescope' })
 vim.keymap.set('n', '<leader>sh', require('telescope.builtin').help_tags, { desc = '[S]earch [H]elp' })
 vim.keymap.set('n', '<leader>sg', ':LiveGrepGitRoot<cr>', { desc = '[S]earch by [G]rep on Git Root' })
 vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { desc = '[S]earch [D]iagnostics' })
