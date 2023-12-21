@@ -225,6 +225,8 @@ vim.keymap.set("n", "<leader>l", ":tabnext<Enter>")
 vim.keymap.set("n", "<leader>q", ":q<Enter>")
 vim.keymap.set("n", "<leader>w", ":w<Enter>")
 
+vim.keymap.set("n", "<leader>e", ":Texplore")
+
 -- file explorer setup
 vim.g.netrw_liststyle = 3
 
@@ -332,7 +334,7 @@ vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { de
 -- See `:help nvim-treesitter`
 require('nvim-treesitter.configs').setup {
   -- Add languages to be installed here that you want installed for treesitter
-  ensure_installed = { 'c', 'cpp', 'lua', 'python', 'tsx', 'javascript', 'typescript', 'vimdoc', 'vim' },
+  ensure_installed = { 'c', 'cpp', 'lua', 'python', 'rust', 'go', 'tsx', 'javascript', 'typescript', 'vimdoc', 'vim' },
 
   -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
   auto_install = false,
@@ -453,9 +455,9 @@ end
 --  define the property 'filetypes' to the map in question.
 local servers = {
   -- clangd = {},
-  -- gopls = {},
+  gopls = {},
   pyright = {},
-  -- rust_analyzer = {},
+  rust_analyzer = {},
   -- tsserver = {},
   -- html = { filetypes = { 'html', 'twig', 'hbs'} },
 
