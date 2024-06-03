@@ -252,6 +252,27 @@ require('lazy').setup({
     },
     build = ':TSUpdate',
   },
+  {
+    "zbirenbaum/copilot.lua",
+    -- cmd = "Copilot",
+    event = "InsertEnter",
+    config = function()
+      require("copilot").setup({
+        suggestion = { enabled = false },
+        panel = { enabled = false },
+      })
+    end,
+  },
+  {
+    "zbirenbaum/copilot-cmp",
+    after = { "copilot.lua" },
+    config = function ()
+      require("copilot_cmp").setup()
+    end
+  },
+
+  -- 'luk400/vim-jukit',
+
 
   -- NOTE: Next Step on Your Neovim Journey: Add/Configure additional "plugins" for kickstart
   --       These are some example plugins that I've included in the kickstart repository.
@@ -265,7 +286,7 @@ require('lazy').setup({
   --    Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
   --
   --    For additional information see: https://github.com/folke/lazy.nvim#-structuring-your-plugins
-  -- { import = 'custom.plugins' },
+  { import = 'custom.plugins' },
 }, {})
 
 -- [[ Setting options ]]
@@ -282,6 +303,9 @@ vim.keymap.set("n", "<leader>q", ":q<Enter>")
 vim.keymap.set("n", "<leader>w", ":w<Enter>")
 
 vim.keymap.set("n", "<leader>e", ":Texplore")
+
+vim.keymap.set("n", "<C-/>", function() require("Comment.api").toggle.linewise.count(vim.v.count > 0 and vim.v.count or 1) end, {})
+vim.keymap.set("v", "<C-/>", "<esc><cmd>lua require('Comment.api').toggle.linewise(vim.fn.visualmode())<cr>", {})
 
 -- file explorer setup
 vim.g.netrw_liststyle = 3
@@ -444,7 +468,7 @@ vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc = 
 vim.defer_fn(function()
   require('nvim-treesitter.configs').setup {
     -- Add languages to be installed here that you want installed for treesitter
-    ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'javascript', 'typescript', 'vimdoc', 'vim', 'bash' },
+    ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', "c_sharp", 'vimdoc', 'vim', 'bash' },
 
     -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
     auto_install = false,
@@ -595,7 +619,7 @@ require('mason-lspconfig').setup()
 --  define the property 'filetypes' to the map in question.
 local servers = {
   -- clangd = {},
-  gopls = {},
+  -- gopls = {},
   pyright = {},
   rust_analyzer = {},
   -- tsserver = {},
@@ -609,6 +633,9 @@ local servers = {
       -- diagnostics = { disable = { 'missing-fields' } },
     },
   },
+  omnisharp = {
+    cmd = { 'OmniSharp' },
+  },
 }
 
 -- Setup neovim lua configuration
@@ -617,6 +644,7 @@ require('neodev').setup()
 -- nvim-cmp supports additional completion capabilities, so broadcast that to servers
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
+
 
 -- Ensure the servers above are installed
 local mason_lspconfig = require 'mason-lspconfig'
@@ -682,6 +710,9 @@ cmp.setup {
     end, { 'i', 's' }),
   },
   sources = {
+    -- Copilot Source
+    -- { name = "copilot", group_index = 2 },
+    { name = "copilot"},
     { name = 'nvim_lsp' },
     { name = 'luasnip' },
     { name = 'path' },
