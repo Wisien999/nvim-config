@@ -376,6 +376,8 @@ vim.keymap.set("i", "jj", "<Esc>", {})
 
 vim.keymap.set("n", "<leader>h", ":tabprev<Enter>")
 vim.keymap.set("n", "<leader>l", ":tabnext<Enter>")
+vim.keymap.set("n", "[t", ":tabprev<Enter>")
+vim.keymap.set("n", "]t", ":tabnext<Enter>")
 
 vim.keymap.set("n", "<leader>q", ":q<Enter>")
 vim.keymap.set("n", "<leader>w", ":w<Enter>")
@@ -724,6 +726,8 @@ mason_lspconfig.setup_handlers {
     }
   end,
 }
+
+require("custom.autocmds")
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
