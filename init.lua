@@ -38,6 +38,8 @@ I hope you enjoy your Neovim journey,
 P.S. You can delete this when you're done too. It's your config now :)
 --]]
 
+
+
 -- Set <space> as the leader key
 -- See `:help mapleader`
 --  NOTE: Must happen before plugins are required (otherwise wrong leader will be used)
@@ -157,9 +159,6 @@ require('lazy').setup({
           end, { 'i', 's' }),
         },
         sources = {
-          -- Copilot Source
-          -- { name = "copilot", group_index = 2 },
-          { name = "copilot"},
           { name = 'nvim_lsp' },
           { name = 'luasnip' },
           { name = 'path' },
@@ -298,8 +297,7 @@ require('lazy').setup({
     opts = {},
   },
 
-  -- "gc" to comment visual regions/lines
-  { 'numToStr/Comment.nvim', opts = {} },
+  -- "gc" to comment visual regions/lines (built-in in Neovim 0.10+)
 
   -- Fuzzy Finder (files, lsp, etc)
   {
@@ -322,32 +320,14 @@ require('lazy').setup({
     },
   },
 
-  {
-    -- Highlight, edit, and navigate code
-    'nvim-treesitter/nvim-treesitter',
-    dependencies = {
-      'nvim-treesitter/nvim-treesitter-textobjects',
-    },
-    build = ':TSUpdate',
-  },
-  {
-    "zbirenbaum/copilot.lua",
-    -- cmd = "Copilot",
-    event = "InsertEnter",
-    config = function()
-      require("copilot").setup({
-        suggestion = { enabled = false },
-        panel = { enabled = false },
-      })
-    end,
-  },
-  {
-    "zbirenbaum/copilot-cmp",
-    after = { "copilot.lua" },
-    config = function ()
-      require("copilot_cmp").setup()
-    end
-  },
+  -- {
+  --   -- Highlight, edit, and navigate code
+  --   'nvim-treesitter/nvim-treesitter',
+  --   dependencies = {
+  --     'nvim-treesitter/nvim-treesitter-textobjects',
+  --   },
+  --   build = ':TSUpdate',
+  -- },
 
   -- 'luk400/vim-jukit',
 
@@ -384,8 +364,10 @@ vim.keymap.set("n", "<leader>w", ":w<Enter>")
 
 vim.keymap.set("n", "<leader>e", ":tabnew | Oil<CR>")
 
-vim.keymap.set("n", "<C-/>", function() require("Comment.api").toggle.linewise.count(vim.v.count > 0 and vim.v.count or 1) end, {})
-vim.keymap.set("v", "<C-/>", "<esc><cmd>lua require('Comment.api').toggle.linewise(vim.fn.visualmode())<cr>", {})
+vim.keymap.set("n", "<C-/>", "gcc", { remap = true, desc = "Toggle comment" })
+vim.keymap.set("v", "<C-/>", "gc", { remap = true, desc = "Toggle comment" })
+vim.keymap.set("n", "<C-_>", "gcc", { remap = true, desc = "Toggle comment" })
+vim.keymap.set("v", "<C-_>", "gc", { remap = true, desc = "Toggle comment" })
 
 -- file explorer setup
 vim.g.netrw_liststyle = 3
@@ -543,85 +525,8 @@ vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { de
 vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc = '[S]earch [R]esume' })
 
 -- [[ Configure Treesitter ]]
--- See `:help nvim-treesitter`
--- Defer Treesitter setup after first render to improve startup time of 'nvim {filename}'
-vim.defer_fn(function()
-  require('nvim-treesitter.configs').setup {
-    -- Add languages to be installed here that you want installed for treesitter
-    ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', "c_sharp", 'vimdoc', 'vim', 'bash' },
+-- Using Neovim v0.11+ built-in treesitter highlighting
 
-    -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
-    auto_install = false,
-
-    highlight = { enable = true },
-    indent = { enable = true },
-    incremental_selection = {
-      enable = true,
-      keymaps = {
-        init_selection = '<c-space>',
-        node_incremental = '<c-space>',
-        scope_incremental = '<c-s>',
-        node_decremental = '<M-space>',
-      },
-    },
-    textobjects = {
-      select = {
-        enable = true,
-        lookahead = true, -- Automatically jump forward to textobj, similar to targets.vim
-        keymaps = {
-          -- You can use the capture groups defined in textobjects.scm
-          ['aa'] = '@parameter.outer',
-          ['ia'] = '@parameter.inner',
-          ['af'] = '@function.outer',
-          ['if'] = '@function.inner',
-          ['ac'] = '@class.outer',
-          ['ic'] = '@class.inner',
-        },
-      },
-      move = {
-        enable = true,
-        set_jumps = true, -- whether to set jumps in the jumplist
-        goto_next_start = {
-          [']m'] = '@function.outer',
-          [']]'] = '@class.outer',
-        },
-        goto_next_end = {
-          [']M'] = '@function.outer',
-          [']['] = '@class.outer',
-        },
-        goto_previous_start = {
-          ['[m'] = '@function.outer',
-          ['[['] = '@class.outer',
-        },
-        goto_previous_end = {
-          ['[M'] = '@function.outer',
-          ['[]'] = '@class.outer',
-        },
-      },
-      swap = {
-        enable = true,
-        swap_next = {
-          ['<leader>a'] = '@parameter.inner',
-        },
-        swap_previous = {
-          ['<leader>A'] = '@parameter.inner',
-        },
-      },
-    },
-  }
-end, 0)
---=======
-    --swap = {
-      --enable = true,
-      --swap_next = {
-        --['<leader>a'] = '@parameter.inner',
-      --},
-      --swap_previous = {
-        --['<leader>A'] = '@parameter.inner',
-      --},
-    --},
-  --},
---}
 
 -- [[ Configure LSP ]]
 --  This function gets run when an LSP connects to a particular buffer.
@@ -643,10 +548,10 @@ local on_attach = function(_, bufnr)
   nmap('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
   nmap('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction')
 
-  nmap('gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
-  nmap('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
-  nmap('gI', require('telescope.builtin').lsp_implementations, '[G]oto [I]mplementation')
-  nmap('<leader>D', require('telescope.builtin').lsp_type_definitions, 'Type [D]efinition')
+  nmap('gd', vim.lsp.buf.definition, '[G]oto [D]efinition')
+  nmap('gr', vim.lsp.buf.references, '[G]oto [R]eferences')
+  nmap('gI', vim.lsp.buf.implementation, '[G]oto [I]mplementation')
+  nmap('<leader>D', vim.lsp.buf.type_definition, 'Type [D]efinition')
   nmap('<leader>ds', require('telescope.builtin').lsp_document_symbols, '[D]ocument [S]ymbols')
   --nmap('<leader>ws', require('telescope.builtin').lsp_dynamic_workspace_symbols, '[W]orkspace [S]ymbols')
 
@@ -683,8 +588,7 @@ require('mason-lspconfig').setup()
 local servers = {
   -- clangd = {},
   -- gopls = {},
-  pyright = {},
-  rust_analyzer = {},
+  -- rust_analyzer = {},
   -- tsserver = {},
   -- html = { filetypes = { 'html', 'twig', 'hbs'} },
 
@@ -695,9 +599,6 @@ local servers = {
       -- NOTE: toggle below to ignore Lua_LS's noisy `missing-fields` warnings
       -- diagnostics = { disable = { 'missing-fields' } },
     },
-  },
-  omnisharp = {
-    cmd = { 'OmniSharp' },
   },
 }
 
@@ -726,6 +627,21 @@ mason_lspconfig.setup_handlers {
     }
   end,
 }
+
+-- Custom Rust setup (handles proprietary/wrapper configurations if present)
+local ok_rust, rust = pcall(require, 'custom.rust')
+if ok_rust then
+  rust.setup(on_attach, capabilities)
+end
+
+-- Custom Go setup
+local ok_go, go = pcall(require, 'custom.go')
+if ok_go then
+  go.setup(on_attach, capabilities)
+end
+
+
+
 
 require("custom.autocmds")
 
