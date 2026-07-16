@@ -12,3 +12,13 @@ vim.api.nvim_create_autocmd("BufRead", {
             runCurrentFileBinding(":w !python<Enter>")
         end,
 })
+
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "gitcommit",
+  callback = function()
+    vim.opt_local.textwidth = 72
+    -- Optional: also set a visual guideline at 72 chars
+    vim.opt_local.colorcolumn = "72" 
+  end,
+})
+
