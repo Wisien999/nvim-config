@@ -18,7 +18,7 @@ vim.api.nvim_create_autocmd("FileType", {
   callback = function()
     vim.opt_local.textwidth = 72
     -- Optional: also set a visual guideline at 72 chars
-    vim.opt_local.colorcolumn = "72" 
+    vim.opt_local.colorcolumn = "72"
   end,
 })
 

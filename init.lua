@@ -640,6 +640,10 @@ if ok_go then
   go.setup(on_attach, capabilities)
 end
 
+local ok_private, private = pcall(require, 'custom.private')
+if ok_private then
+  private.setup(on_attach, capabilities)
+end
 
 
 
